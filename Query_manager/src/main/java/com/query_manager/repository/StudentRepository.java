@@ -1,0 +1,10 @@
+package com.query_manager.repository;
+
+import com.query_manager.entity.Student;
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import java.util.Optional;
+
+public interface StudentRepository extends JpaRepository<Student, Long> {
+    Optional<Student> findByEnrollmentNumber(String enrollmentNumber);
+}

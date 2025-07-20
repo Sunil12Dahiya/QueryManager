@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Student Query Form</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+        body {
+            background: #f0f2f5;
+        }
+        .custom-card {
+            border: none;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .custom-header {
+            background: linear-gradient(to right, #4b6cb7, #182848);
+            color: white;
+            padding: 1rem 1.5rem;
+        }
+        .custom-header h4 {
+            margin-bottom: 0;
+            font-weight: bold;
+        }
+        label {
+            font-weight: 600;
+        }
+        .btn-success {
+            background-color: #28a745;
+            border-color: #28a745;
+            font-weight: 500;
+        }
+        .btn-success:hover {
+            background-color: #218838;
+        }
+        .form-control,
+        .form-select {
+            border-radius: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="card custom-card shadow">
+        <div class="custom-header">
+            <h4>📋 Student Attendance Query Submission Form</h4>
+        </div>
+        <div class="card-body bg-white">
+            <form th:action="@{/submit-query}" th:object="${studentQuery}" method="post">
+
+                <!-- Name & Enrollment -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label>Name</label>
+                        <input type="text" class="form-control" th:value="${student.fullName}" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Enrollment Number</label>
+                        <input type="text" class="form-control" th:value="${student.enrollmentNo}" readonly />
+                    </div>
+                </div>
+
+                <!-- Section & Batch -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label>Section</label>
+                        <input type="text" class="form-control" th:value="${student.section}" readonly />
+                    </div>
+                    <div class="col-md-6">
+                        <label>Batch</label>
+                        <input type="text" class="form-control" th:value="${student.batch}" id="batch" readonly />
+                    </div>
+                </div>
+
+                <!-- Lecture Type & Name -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label>Lecture Type</label>
+                        <select th:field="*{type}" class="form-select" required>
+                            <option th:each="t : ${types}" th:value="${t}" th:text="${t}"></option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label>Lecture Name</label>
+                        <select th:field="*{lectureName}" class="form-select" id="lectureSelect" required>
+                            <option value="">-- Select Lecture --</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Lecture Time -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label>Lecture Time</label>
+                        <input type="text" th:field="*{time}" class="form-control" placeholder="e.g., 10:00 AM - 11:00 AM" required />
+                    </div>
+                </div>
+
+                <!-- Reason -->
+                <div class="mb-4">
+                    <label>Reason / Describe the Issue</label>
+                    <textarea th:field="*{description}" class="form-control" rows="4"
+                              placeholder="Briefly explain your issue or reason for this query..." required></textarea>
+                </div>
+
+                <!-- Submit -->
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-success btn-lg">✅ Submit Query</button>
+                </div>
+
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- JavaScript for Lecture Filter -->
+<script>
+    const lecturesByBatch = {
+        "2023": [
+            "Modern Computer Architecture (Major)",
+            "Computer Networks (Major)",
+            "Intro to AI and ML (Major)",
+            "Probability and Statistics (Major)",
+            "Quantum Computing (Elective)",
+            "Data Mining (Elective)",
+            "Mobile Application Development (Elective)"
+        ],
+        "2024": [
+            "Analysis and Design of Algorithms (Major)",
+            "Advance Programming / OOP (Major)",
+            "Database Management Systems (Major)",
+            "Mathematics-III (Calculus & Linear Algebra) (Major)",
+            "Data Mining (Elective)",
+            "Mobile Application Development (Elective)"
+        ],
+        "2025": [
+            "Problem Solving and Programming (Major)",
+            "Mathematics-I (Major)",
+            "System and Web Essentials (Major)"
+        ]
+    };
+
+    function updateLectureOptions() {
+        const batch = document.getElementById("batch").value;
+        const lectureSelect = document.getElementById("lectureSelect");
+
+        lectureSelect.innerHTML = '<option value="">-- Select Lecture --</option>';
+
+        if (lecturesByBatch[batch]) {
+            lecturesByBatch[batch].forEach(lecture => {
+                const option = document.createElement("option");
+                option.value = lecture;
+                option.text = lecture;
+                lectureSelect.appendChild(option);
+            });
+        }
+    }
+
+    // Trigger the update on page load based on batch
+    window.onload = updateLectureOptions;
+</script>
+
+</body>
+</html>

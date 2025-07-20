@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Admin - Student Queries</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- Bootstrap -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .card-header {
+            background: linear-gradient(to right, #1e3c72, #2a5298);
+        }
+        th, td {
+            vertical-align: middle !important;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container py-5">
+    <div class="card shadow">
+        <div class="card-header text-white">
+            <h4 class="mb-0">📋 All Submitted Student Queries</h4>
+        </div>
+
+        <div class="card-body bg-white">
+
+            <!-- 🔍 Search/Filter Form -->
+            <form method="get" action="#" class="row g-3 align-items-end mb-4">
+                <div class="col-md-3">
+                    <label class="form-label">Search by Name</label>
+                    <input type="text" name="name" class="form-control" placeholder="" th:value="${name}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Batch</label>
+                    <input type="text" name="batch" class="form-control" placeholder="" th:value="${batch}">
+                </div>
+                <div class="col-md-2">
+                    <label class="form-label">Section</label>
+                    <input type="text" name="section" class="form-control" placeholder="" th:value="${section}">
+                </div>
+                <div class="col-md-3">
+                    <label class="form-label">Sort by Date</label>
+                    <select name="sort" class="form-select">
+                        <option th:selected="${sort == null}" value="">Select</option>
+                        <option th:selected="${sort == 'desc'}" value="desc">Newest First</option>
+                        <option th:selected="${sort == 'asc'}" value="asc">Oldest First</option>
+                    </select>
+                </div>
+                <div class="col-md-2 d-flex gap-2">
+                    <button type="submit" class="btn btn-primary w-100">🔍 Filter</button>
+                    <a href="/admin/studentquery" class="btn btn-secondary w-100">Reset</a>
+                </div>
+            </form>
+
+            <!-- ✅ Download Buttons -->
+            <div class="mb-4 d-flex justify-content-end gap-2">
+                <a href="/admin/studentquery/excel" class="btn btn-success">📥 Download Excel</a>
+				<a class="btn btn-primary" href="/admin/students">📑 Registered</a>
+				<a class="btn btn-primary" href="/reg/student/home">Student Home Page</a>
+
+            </div>
+
+            <!-- ✅ Table -->
+            <div th:if="${queries != null and !queries.isEmpty()}">
+                <div class="table-responsive">
+                    <table class="table table-bordered table-striped table-hover align-middle">
+                        <thead class="table-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Enrollment</th>
+                            <th>Batch</th>
+                            <th>Section</th>
+                            <th>Lecture Type</th>
+                            <th>Lecture Name</th>
+                            <th>Lecture Time</th>
+                            <th>Description</th>
+                            <th>Status</th>
+                            <th>Submitted At</th>
+                            <th>Update</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr th:each="query, iterStat : ${queries}">
+                            <td th:text="${iterStat.index + 1}">1</td>
+                            <td th:text="${query.student.name}">Rohit</td>
+                            <td th:text="${query.student.enrollmentNumber}">ENR123</td>
+                            <td th:text="${query.student.batch}">2025</td>
+                            <td th:text="${query.student.section}">A</td>
+                            <td th:text="${query.type}">Lecture</td>
+                            <td th:text="${query.lectureName}">DBMS</td>
+                            <td th:text="${query.time}">10 AM</td>
+                            <td th:text="${query.description}">Help</td>
+                            <td><span class="badge bg-secondary" th:text="${query.status}">Pending</span></td>
+                            <td th:text="${#temporals.format(query.submittedAt, 'dd-MM-yyyy HH:mm')}">22-06-2025</td>
+                            <td>
+                                <form th:action="@{/admin/query/updateStatus}" method="post" class="d-flex gap-1">
+                                    <input type="hidden" name="id" th:value="${query.id}" />
+                                    <input type="text" class="form-control form-control-sm" name="status" placeholder="New Status" />
+                                    <button type="submit" class="btn btn-sm btn-primary">Update</button>
+                                </form>
+                            </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- No Queries -->
+            <div th:if="${queries == null or queries.isEmpty()}">
+                <div class="alert alert-info text-center">No queries have been submitted yet.</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+</body>
+</html>
