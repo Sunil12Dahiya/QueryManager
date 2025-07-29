@@ -71,7 +71,7 @@ public class AdminController {
                 q.getStudent().getEnrollmentNumber(),
                 q.getStudent().getBatch(),
                 q.getStudent().getSection(),
-                q.getType(),
+                q.getType().toString(), // or .name() if it's an enum
                 q.getLectureName(),
                 q.getTime(),
                 "\"" + q.getDescription().replace("\"", "'") + "\"", // avoid comma issues
