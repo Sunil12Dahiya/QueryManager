@@ -99,7 +99,12 @@
                             <td>
                                 <form th:action="@{/admin/query/updateStatus}" method="post" class="d-flex gap-1">
                                     <input type="hidden" name="id" th:value="${query.id}" />
-                                    <input type="text" class="form-control form-control-sm" name="status" placeholder="New Status" />
+									<select name="status" class="form-select form-select-sm" required>
+									    <option value="" disabled selected>Change Status</option>
+									    <option value="Approved">Approved</option>
+									    <option value="Rejected">Rejected</option>
+									</select>
+
                                     <button type="submit" class="btn btn-sm btn-primary">Update</button>
                                 </form>
                             </td>
